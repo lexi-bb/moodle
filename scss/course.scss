@@ -136,3 +136,16 @@
 .modchoosercontent .optionscontainer .option .optionactions .btn {
     border: 0;
 }
+
+
+/* ============================================================
+   Changes by @bb — quiz question .formulation background.
+   Boost theme styles .que .formulation with a light-blue
+   background derived from $info. Override it to match the
+   theme's page background (#FBF6E8) so questions blend in.
+   ============================================================ */
+.que .formulation {
+    background-color: #FBF6E8;
+    border-color: #E0DACB;
+    color: #302F26;
+}

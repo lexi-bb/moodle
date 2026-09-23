@@ -218,6 +218,17 @@ legend {
 .drawer-toggles .drawer-right-toggle {
     z-index: 3;
 }
+
+/* Changes by @bb: Boost positions .drawer-toggler at top: calc($navbar-height + 0.7rem)
+   ≈ 61px, which lands underneath academi's stacked headers (top bar ~70px + lower
+   #header ~60px = ~130px). Push the toggler below the lower header on tablet+desktop
+   so users can open the course-index / blocks drawers. Mobile (≤767px) is unaffected
+   — Boost already moves the toggler to the bottom of the viewport there. */
+@media (min-width: 768px) {
+    .drawer-toggles .drawer-toggler {
+        top: 138px; /* clears top bar (70px) + lower header (~60px) + 8px gap */
+    }
+}
 .main-inner {
     .drawer-left-toggle,
     .drawer-right-toggle {
@@ -338,7 +349,7 @@ legend {
 }
 body:not(.pagelayout-maintenance) #page-wrapper {
     height: auto;
-    margin-top: 60px;
+    margin-top: 130px; /* Changes by @bb — accounts for top bar (70px) + lower header (~60px) */
 }
 #page {
     margin-top: 0;
@@ -1816,16 +1827,31 @@ body:not(.pagelayout-frontpage) {
     }
 }
 
-@media (max-width: 991px) {
-    .drawer-left,
-    .drawer-right {
-        margin-top: 60px;
-    }
+/* Changes by @bb: drawers must clear academi's stacked top bar (70px) + lower
+   header (~60px) = 130px at all viewport widths ≥768px (desktop + tablet).
+   Boost defaults the drawer to `top: 0; height: 100vh`, which means the top
+   ~130px of the drawer panel slides under the fixed headers. The rule below
+   pushes the drawer down so its full content is visible/scrollable, AND the
+   height is shortened so the drawer doesn't extend past the bottom of the
+   viewport. The mobile (≤767px) override below uses 138px because the BB
+   top bar is taller on mobile (78px instead of 70px). */
+.drawer-left,
+.drawer-right {
+    top: 130px !important;
+    margin-top: 0 !important;
+    height: calc(100vh - 130px) !important;
 }
 
 @media (max-width: 767px) {
+    /* Changes by @bb: drawers must clear the taller mobile top bar (78px) + lower header (~60px) = 138px */
+    .drawer-left,
+    .drawer-right,
+    [data-region=left-hand-drawer].drawer,
     [data-region=right-hand-drawer].drawer {
-        top: 60px;
+        top: 138px !important;
+        margin-top: 0 !important;
+        height: calc(100vh - 138px) !important;
+        max-height: calc(100vh - 138px) !important;
     }
 }
 /* End of Drawer */
@@ -1873,5 +1899,28 @@ body:not(.pagelayout-frontpage) {
     background: $white;
     &:hover {
         background-color: $wild_sand;
+    }
+}
+
+
+/* ============================================================
+   Changes by @bb — Background overrides for the frontpage and
+   course pages so they share the same #FBF6E8 beige background.
+   Other pages (login, admin, etc.) keep their native backgrounds.
+   ============================================================ */
+body.pagelayout-frontpage,
+body.pagelayout-course,
+body.pagelayout-incourse,
+body.pagelayout-coursecategory {
+    .main-inner,
+    #page,
+    #region-main {
+        background-color: #FBF6E8;
+    }
+    #page.drawers {
+        background-color: #FBF6E8 !important;
+        .main-inner {
+            background-color: #FBF6E8 !important;
+        }
     }
 }

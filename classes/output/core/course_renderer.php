@@ -120,6 +120,15 @@ class course_renderer extends \core_course_renderer {
             $imgurl = $noimgurl;
         }
         $data['imgurl'] = $imgurl;
+        // Changes by @bb: pass course summary to template for description block.
+        $data['summary'] = $course->summary;
+        // Changes by @bb: pass course tags to template.
+        $tags = \core_tag_tag::get_item_tags_array('core', 'course', $course->id);
+        $data['tags'] = [];
+        foreach ($tags as $tag) {
+            $data['tags'][] = ['tagname' => $tag];
+        }
+        $data['hastags'] = !empty($tags);
         return $data;
     }
 
@@ -135,6 +144,188 @@ class course_renderer extends \core_course_renderer {
         $data[$template] = 1;
         $data['ouput'] = $this->output;
         return $this->output->render_from_template('theme_academi/course_blocks', $data);
+    }
+
+    /**
+     * Render the custom "My Courses" block.
+     * Changes by @bb — shows enrolled courses with progress for logged-in users,
+     * and a signup/login widget for guests / not-logged-in users.
+     *
+     * @return string
+     */
+    public function academi_my_courses_block() {
+        global $USER, $CFG;
+
+        // Guests / not logged in: show a signup/login widget instead.
+        if (!isloggedin() || isguestuser()) {
+            return $this->academi_guest_login_widget();
+        }
+
+        require_once($CFG->libdir . '/enrollib.php');
+        require_once($CFG->libdir . '/completionlib.php');
+
+        $data = [
+            'lessonscompleted' => $this->academi_count_completed_modules($USER->id),
+            'lessonssaved' => $this->academi_count_favourite_courses($USER->id),
+            'mycoursesurl' => (new moodle_url('/my/courses.php'))->out(),
+            'courses' => $this->academi_get_my_courses_with_progress($USER->id, 2),
+            'hascourses' => false,
+        ];
+        $data['hascourses'] = !empty($data['courses']);
+
+        return $this->output->render_from_template('theme_academi/my_courses_block', $data);
+    }
+
+    /**
+     * Render the signup/login widget shown above All Courses for guests.
+     * Changes by @bb.
+     *
+     * @return string
+     */
+    protected function academi_guest_login_widget() {
+        global $CFG;
+        $data = [
+            'loginurl' => (new moodle_url('/login/index.php'))->out(),
+            'signupurl' => (new moodle_url('/login/signup.php'))->out(),
+            'logintoken' => \core\session\manager::get_login_token(),
+            'cansignup' => !empty($CFG->registerauth) && $CFG->registerauth !== 'none',
+        ];
+        return $this->output->render_from_template('theme_academi/guest_login_widget', $data);
+    }
+
+    /**
+     * Count fully completed courses for the user — defined as courses where
+     * \core_completion\progress::get_course_progress_percentage() == 100.
+     * This matches what is shown on the progress bars of each course card.
+     * Changes by @bb.
+     *
+     * @param int $userid
+     * @return int
+     */
+    protected function academi_count_completed_modules($userid) {
+        global $CFG;
+        require_once($CFG->libdir . '/enrollib.php');
+        require_once($CFG->libdir . '/completionlib.php');
+
+        $courses = enrol_get_all_users_courses($userid, true, 'id, shortname, fullname, enablecompletion');
+        if (empty($courses)) {
+            return 0;
+        }
+        $count = 0;
+        foreach ($courses as $course) {
+            $progress = \core_completion\progress::get_course_progress_percentage($course, $userid);
+            if (!is_null($progress) && (int) floor($progress) >= 100) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Count favourited (saved) courses for the user via core_favourites service.
+     * Changes by @bb.
+     *
+     * @param int $userid
+     * @return int
+     */
+    protected function academi_count_favourite_courses($userid) {
+        try {
+            $usercontext = \context_user::instance($userid);
+            $ufservice = \core_favourites\service_factory::get_service_for_user_context($usercontext);
+            $favourites = $ufservice->find_favourites_by_type('core_course', 'courses');
+            return is_array($favourites) ? count($favourites) : 0;
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Get up to $limit enrolled courses for the user, ordered by last access,
+     * with progress percentage attached.
+     * Changes by @bb.
+     *
+     * @param int $userid
+     * @param int $limit
+     * @return array list of course view-model arrays for the mustache template
+     */
+    protected function academi_get_my_courses_with_progress($userid, $limit = 2) {
+        global $DB, $CFG;
+
+        // Get enrolled courses ordered by most recently accessed.
+        $sql = 'SELECT c.*, l.timeaccess
+                FROM {user_lastaccess} l
+                INNER JOIN {course} c ON c.id = l.courseid
+                INNER JOIN {enrol} e ON e.courseid = c.id
+                INNER JOIN {user_enrolments} ue ON ue.enrolid = e.id AND ue.userid = l.userid
+                WHERE l.courseid > 1 AND l.userid = :userid
+                ORDER BY l.timeaccess DESC';
+        $courses = $DB->get_records_sql($sql, ['userid' => $userid], 0, $limit);
+
+        // Fallback: if no lastaccess data yet, use enrol_get_my_courses directly.
+        if (empty($courses)) {
+            $courses = enrol_get_my_courses('*', 'visible DESC, sortorder ASC', $limit);
+        }
+
+        $data = [];
+        foreach ($courses as $course) {
+            $courseurl = new moodle_url('/course/view.php', ['id' => $course->id]);
+            $progress = \core_completion\progress::get_course_progress_percentage($course, $userid);
+            $progresspct = !is_null($progress) ? (int) floor($progress) : 0;
+
+            // Course image (use same logic as available_coursebox).
+            $imgurl = $this->academi_get_course_image_url($course);
+
+            // Truncate summary.
+            $summary = strip_tags(format_text($course->summary ?? '', $course->summaryformat ?? FORMAT_HTML));
+            $summary = shorten_text($summary, 100, true);
+
+            // Course tags.
+            $coursetags = \core_tag_tag::get_item_tags_array('core', 'course', $course->id);
+            $tags = [];
+            foreach ($coursetags as $tag) {
+                $tags[] = ['tagname' => $tag];
+            }
+
+            $data[] = [
+                'name' => format_string($course->fullname, true, ['context' => context_course::instance($course->id)]),
+                'url' => $courseurl->out(),
+                'imgurl' => $imgurl,
+                'summary' => $summary,
+                'hassummary' => !empty($summary),
+                'hasprogress' => !is_null($progress),
+                'progress' => $progresspct,
+                'tags' => $tags,
+                'hastags' => !empty($tags),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get a course image URL, falling back to the theme's no-image placeholder.
+     * Changes by @bb.
+     *
+     * @param \stdClass $course
+     * @return string
+     */
+    protected function academi_get_course_image_url($course) {
+        global $CFG;
+        $courseinlist = new \core_course_list_element($course);
+        foreach ($courseinlist->get_course_overviewfiles() as $file) {
+            if ($file->is_valid_image()) {
+                $imgurl = moodle_url::make_file_url(
+                    "$CFG->wwwroot/pluginfile.php",
+                    '/' . $file->get_contextid() . '/' . $file->get_component() . '/' .
+                        $file->get_filearea() . $file->get_filepath() . $file->get_filename(),
+                    !$file->is_valid_image()
+                );
+                return $imgurl->out();
+            }
+        }
+        // Fallback to theme's no-image.
+        $noimg = $this->page->theme->image_url('no-image', 'theme');
+        return $noimg->out();
     }
 
     /**
@@ -271,9 +462,11 @@ class course_renderer extends \core_course_renderer {
                     break;
 
                 case FRONTPAGEALLCOURSELIST:
+                    // Changes by @bb — prepend custom "My Courses" block before the All Courses block.
+                    $output .= $this->academi_my_courses_block();
                     $availablecourseshtml = $this->frontpage_available_courses();
                     $output .= $this->frontpage_part('skipavailablecourses', 'frontpage-available-course-list',
-                        get_string('availablecourses'), $availablecourseshtml);
+                        'All Courses', $availablecourseshtml); // Changes by @bb — renamed from "Available courses"
                     break;
 
                 case FRONTPAGECATEGORYNAMES:

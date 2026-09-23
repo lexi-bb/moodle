@@ -1,0 +1,34 @@
+{{!
+    @template theme_academi/guest_login_widget
+
+    Changes by @bb — login/signup widget shown above All Courses
+    for guests / not-logged-in users.
+
+    Context variables:
+    * loginurl    - URL to POST login form (/login/index.php)
+    * signupurl   - URL to signup page (/login/signup.php)
+    * logintoken  - CSRF login token
+    * cansignup   - bool, true if self-registration is enabled
+}}
+<div class="guest-login-section">
+    <div class="container">
+        <div class="guest-login-card">
+            <h3 class="guest-login-heading">Log in to see and save your progress:</h3>
+            <form class="guest-login-form" action="{{loginurl}}" method="post">
+                <input type="hidden" name="logintoken" value="{{logintoken}}">
+                <div class="guest-login-field">
+                    <label for="guest-login-username">username</label>
+                    <input type="text" name="username" id="guest-login-username" autocomplete="username">
+                </div>
+                <div class="guest-login-field">
+                    <label for="guest-login-password">password</label>
+                    <input type="password" name="password" id="guest-login-password" autocomplete="current-password">
+                </div>
+                <div class="guest-login-actions">
+                    <a href="{{signupurl}}" class="btn-create-account">Create account</a>
+                    <button type="submit" class="btn-login">Log in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

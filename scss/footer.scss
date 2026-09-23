@@ -48,11 +48,15 @@
     }
     .footer-main {
         background-color: $night_rider;
-        padding: 30px 0 54px;
+        padding: 5px 0 5px; /* Changes by @bb: reduced from 30px 0 54px to shrink footer height */
         position: relative;
         z-index: 0;
         .container-fluid {
             max-width: 1500px;
+            /* Changes by @bb: align-items stretch so both columns share equal height for vertical centering */
+            > .row {
+                align-items: stretch;
+            }
         }
         h2 {
             font-weight: bold;
@@ -67,23 +71,31 @@
             }
         }
         .infoarea {
-            padding: 25px 0 0;
+            padding: 5px 0 0; /* Changes by @bb: reduced from 25px */
+            /* Changes by @bb: flex row to put logo and text side by side */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            p {
+                margin: 0; /* Changes by @bb: remove default margin for vertical centering */
+            }
+            /* Changes by @bb: reduced logo to 50x50 to match social media icon */
             .footer-logo {
-                max-width: 200px;
-                margin: 0 0 18px;
+                max-width: 50px;
+                margin: 0;
+                flex-shrink: 0;
                 a {
                     display: block;
                     img {
-                        width: 100%;
-                        height: auto;
-                        max-height: 150px;
+                        width: 50px;
+                        height: 50px;
                         object-fit: contain;
                     }
                 }
             }
         }
         .foot-links {
-            padding: 25px 0 0;
+            padding: 10px 0 0; /* Changes by @bb: reduced from 25px */
             ul {
                 list-style: none;
                 padding: 0;
@@ -102,7 +114,7 @@
             }
         }
         .contact-info {
-            padding: 25px 0 0;
+            padding: 10px 0 0; /* Changes by @bb: reduced from 25px */
             h2 {
                 margin-bottom: 18px;
             }
@@ -112,8 +124,14 @@
         color: initial;
     }
 }
+/* Changes by @bb: right-aligned, vertically centered, 50x50 icon with transparent bg */
 #footer .footer-main .social-media {
-    padding: 25px 0 0;
+    padding: 0;
+    text-align: right;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     h6 {
         font-size: 14px;
         color: $white;
@@ -123,15 +141,17 @@
         padding: 0;
         margin: 0;
         overflow: hidden;
+        display: flex;
+        justify-content: flex-end;
         li {
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
             text-align: center;
             border-radius: 5px;
             display: inline-block;
-            margin-right: 15px;
-            margin-bottom: 15px;
+            margin-right: 0;
+            margin-bottom: 0;
             overflow: hidden;
             position: relative;
             &:after {
@@ -159,7 +179,7 @@
                 color: $white;
                 display: inline-block;
                 border-radius: 5px;
-                background-color: $white;
+                background-color: transparent;
                 &:hover,
                 &:focus {
                     text-decoration: none;
@@ -251,3 +271,146 @@
     }
 }
 /* End of Footer */
+
+
+/* ============================================================
+   Changes by @bb: New custom footer matching Figma design
+   ============================================================ */
+/* Changes by @bb: all values below measured from beta.basilicabio.org (baseline). */
+#page-footer .footer-main.footer-custom {
+    background: #E0DACB;
+    padding: 48px 24px;
+    min-height: 228px;
+    position: relative;
+
+    .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 60px;
+    }
+
+    /* Left column: logo + brand + copyright */
+    .footer-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        max-width: 384px;
+        flex: 0 1 auto;
+
+        /* Brand link wraps logo + wordmark — no underline, no color change */
+        .footer-brand-link {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            text-decoration: none;
+            &:hover { text-decoration: none; }
+        }
+
+        .footer-logo {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 0;
+            img {
+                width: 30px;
+                height: 30px;
+                object-fit: contain;
+            }
+        }
+
+        .footer-brand {
+            font-family: 'Epilogue', sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 1;
+            letter-spacing: -0.35px;
+            text-transform: uppercase;
+            color: #313c0a;
+            margin-bottom: 4px;
+        }
+
+        .footer-copyright-text {
+            font-family: 'Averia Serif Libre', serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: normal;
+            text-transform: none;
+            color: #5f5d4f;
+            max-width: 300px;
+        }
+    }
+
+    /* Right: two link columns */
+    .footer-right {
+        display: flex;
+        gap: 80px;
+        flex: 0 1 auto;
+
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            min-width: 129px;
+
+            .footer-col-title {
+                font-family: 'Epilogue', sans-serif;
+                font-style: normal;
+                font-weight: 900;
+                font-size: 12px;
+                line-height: 1;
+                letter-spacing: 1.2px;
+                text-transform: uppercase;
+                color: #5f5d4f;
+                padding-bottom: 0;
+            }
+
+            .footer-link {
+                font-family: 'Averia Serif Libre', serif;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 1.4;
+                text-decoration: underline;
+                text-transform: none;
+                letter-spacing: normal;
+                color: #302F26;
+
+                &:hover,
+                &:focus {
+                    color: #302F26;
+                    text-decoration: underline;
+                    opacity: 0.75;
+                }
+            }
+        }
+    }
+}
+
+/* Hide the old footer-bottom copyright bar in the custom footer */
+#page-footer .footer-custom ~ .footer-bottom {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    #page-footer .footer-main.footer-custom {
+        padding: 32px 20px;
+
+        .footer-inner {
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .footer-right {
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+    }
+}

@@ -113,6 +113,58 @@
 
         drawerClass();
 
+        // Changes by @bb: move primary navigation links into user dropdown menu.
+        var $primaryNav = $('#header .primary-navigation .nav-link');
+        var $userMenu = $('#carousel-item-main');
+        if ($primaryNav.length && $userMenu.length) {
+            var $divider = $('<div class="dropdown-divider"></div>');
+            $userMenu.prepend($divider);
+            $($primaryNav.get().reverse()).each(function() {
+                var $link = $(this);
+                var $item = $('<a class="dropdown-item" role="menuitem" tabindex="-1"></a>');
+                $item.attr('href', $link.attr('href'));
+                $item.text($link.text().trim());
+                $userMenu.prepend($item);
+            });
+        }
+
+        // Changes by @bb: move notifications and messaging into user dropdown menu.
+        var $notifications = $('#nav-notification-popover-container');
+        var $messaging = $('[data-region="popover-region-messages"]');
+        if ($userMenu.length) {
+            if ($notifications.length || $messaging.length) {
+                var $divider2 = $('<div class="dropdown-divider"></div>');
+                $userMenu.prepend($divider2);
+            }
+            if ($messaging.length) {
+                var msgHref = $messaging.find('a.popover-region-toggle').attr('href') || '#';
+                var $msgItem = $('<a class="dropdown-item" role="menuitem" tabindex="-1"><i class="fa fa-comment fa-fw"></i> Messages</a>');
+                $msgItem.attr('href', msgHref);
+                $msgItem.on('click', function(e) {
+                    e.preventDefault();
+                    $messaging.find('a.popover-region-toggle').trigger('click');
+                });
+                $userMenu.prepend($msgItem);
+                $messaging.addClass('d-none');
+            }
+            if ($notifications.length) {
+                var $notifItem = $('<a class="dropdown-item" role="menuitem" tabindex="-1"><i class="fa fa-bell fa-fw"></i> Notifications</a>');
+                $notifItem.on('click', function(e) {
+                    e.preventDefault();
+                    $notifications.find('.popover-region-toggle').trigger('click');
+                });
+                $userMenu.prepend($notifItem);
+                $notifications.addClass('d-none');
+            }
+        }
+
+        // Changes by @bb: move search box into the All Courses h2 so it sits inline with the "All Courses" heading.
+        var $searchBox = $('#page-content > #region-main-box > #region-main > div[role="main"] > .box.py-3.d-flex.justify-content-center').first();
+        var $allCoursesHeading = $('#frontpage-available-course-list > h2').first();
+        if ($searchBox.length && $allCoursesHeading.length) {
+            $allCoursesHeading.append($searchBox);
+        }
+
     };
 
     return {

@@ -1,0 +1,83 @@
+{{!
+    @template theme_academi/my_courses_block
+
+    Changes by @bb — My Courses block with real enrolled course progress.
+
+    Context variables:
+    * lessonscompleted - int, count of completed course modules (activities) for the user
+    * lessonssaved - int, count of favourited courses for the user
+    * mycoursesurl - URL to the user's My courses page
+    * hascourses - bool, true if user has enrolled courses
+    * courses - array of course cards, each with:
+        * name, url, imgurl, summary, hassummary, hasprogress, progress
+}}
+<div class="my-courses-section">
+    <div class="container">
+        <h2 class="my-courses-heading">My courses</h2>
+        {{! Changes by @bb: wrap in Bootstrap row/col-md-12 to match the All Courses container math }}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="my-courses-row">
+                    {{! Column 1: stat cards }}
+                    <div class="my-courses-stats">
+                        <div class="stat-card">
+                            <div class="stat-top">
+                                <span class="stat-number">{{lessonscompleted}}</span>
+                                <span class="stat-icon stat-icon-green">
+                                    <i class="fa fa-check-circle"></i>
+                                </span>
+                            </div>
+                            <a href="{{mycoursesurl}}" class="stat-link">Lessons completed <i class="fa fa-arrow-right"></i></a>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-top">
+                                <span class="stat-number">{{lessonssaved}}</span>
+                                <span class="stat-icon stat-icon-blue">
+                                    <i class="fa fa-th-large"></i>
+                                </span>
+                            </div>
+                            <a href="{{mycoursesurl}}" class="stat-link">Lessons saved <i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    {{#hascourses}}
+                        {{#courses}}
+                            <a href="{{url}}" class="my-course-card">
+                                <div class="my-course-img" style="background-image: url('{{imgurl}}');"></div>
+                                <div class="my-course-content">
+                                    <div class="tags-block">
+                                        {{#hastags}}
+                                            {{#tags}}
+                                                <span class="course-tag">{{tagname}}</span>
+                                            {{/tags}}
+                                        {{/hastags}}
+                                        {{^hastags}}
+                                            <span class="course-tag">Self paced course</span>
+                                        {{/hastags}}
+                                    </div>
+                                    <div class="my-course-text">
+                                        <h6>{{name}}</h6>
+                                        {{#hassummary}}<p>{{summary}}</p>{{/hassummary}}
+                                    </div>
+                                    {{! Always show the progress bar; shows 0% when course has no completion data }}
+                                    <div class="progress-block">
+                                        <div class="progress-bar-outer">
+                                            <div class="progress-bar-inner" style="width: {{progress}}%;"></div>
+                                        </div>
+                                        <span class="progress-label">{{progress}}% complete</span>
+                                    </div>
+                                </div>
+                            </a>
+                        {{/courses}}
+                    {{/hascourses}}
+                    {{^hascourses}}
+                        {{! Fill the row with placeholder cards so the stats column isn't alone }}
+                        <div class="my-course-empty">
+                            <p>You're not enrolled in any courses yet.</p>
+                            <a href="#skipavailablecourses" class="btn btn-primary">Browse all courses</a>
+                        </div>
+                    {{/hascourses}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

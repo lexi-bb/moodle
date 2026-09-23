@@ -7,8 +7,7 @@
             border: 0;
         }
     }
-    // Hide the front page course content only when it holds no activity and edit mode is off.
-    &:not(.editing) .course-content:not(:has(ul.topics.frontpage ul.section.img-text > li)) {
+    &:not(.editing) .course-content {
         display: none;
     }
     &.course-content-element .course-content {
@@ -41,12 +40,14 @@
         #page-content .box {
             max-width: 1320px;
             margin: 0 auto;
+            padding: 0; /* Changes by @bb — remove padding, search moves next to heading */
+            border: none;
             .simplesearchform {
-                width: 100%;
+                width: auto;
             }
             form {
-                border: 1px solid $mercury;
-                padding: 20px;
+                border: none;
+                padding: 0;
                 .input-group {
                     width: 100%;
                     .form-control {
@@ -98,9 +99,94 @@
             margin: 0 auto;
         }
     }
+    /* Changes by @bb — position search box inline with "All Courses" heading */
+    #frontpage-available-course-list {
+        position: relative;
+        /* Match the width of the Bootstrap .container used by the All Courses slider */
+        h2 {
+            font-family: 'Averia Serif Libre', serif; /* Changes by @bb */
+            font-weight: 300;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            padding-left: 15px;
+            padding-right: 15px;
+            position: relative;
+            box-sizing: border-box;
+            /* Use same responsive container widths as Bootstrap .container */
+            width: 100%;
+            @media (min-width: 576px) { max-width: 540px; }
+            @media (min-width: 768px) { max-width: 720px; }
+            @media (min-width: 992px) { max-width: 960px; }
+            @media (min-width: 1200px) { max-width: 1140px; }
+            @media (min-width: 1400px) { max-width: 1320px; }
+        }
+    }
+    /* Changes by @bb — search box positioned absolutely at right side of the h2 */
+    #frontpage-available-course-list h2 > .box.py-3.d-flex.justify-content-center {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 300px;
+        margin: 0;
+        padding: 0 !important;
+        .simplesearchform {
+            width: 100%;
+        }
+        .input-group {
+            /* Changes by @bb — pill-shape search bar with tan background */
+            position: relative;
+            background: #E0DACB;
+            border-radius: 999px;
+            padding: 0;
+            overflow: hidden;
+
+            input.form-control {
+                border: none;
+                background: transparent;
+                height: 40px;
+                padding: 6px 16px 6px 40px; /* leave room for left icon */
+                font-size: 14px;
+                font-family: 'Epilogue', sans-serif;
+                font-weight: 400;
+                color: #302F26;
+                box-shadow: none;
+
+                &::placeholder {
+                    color: #6B6758;
+                }
+
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                    background: transparent;
+                }
+            }
+
+            /* Hide the default right-side submit button; we'll use a left icon instead */
+            .search-icon {
+                display: none;
+            }
+
+            /* Draw the magnifier icon on the left */
+            &::before {
+                content: "\f002"; /* fa-magnifying-glass / fa-search */
+                font-family: "FontAwesome", "Font Awesome 6 Free", "Font Awesome 5 Free";
+                font-weight: 900;
+                position: absolute;
+                left: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #302F26;
+                font-size: 14px;
+                pointer-events: none;
+                z-index: 2;
+            }
+        }
+    }
     #frontpage-available-course-list,
     #site-news-forum {
-        background-color: $white;
+        background-color: #FBF6E8; /* Changes by @bb — match page background */
     }
     .custom-alert-block {
         max-width: 1320px;
@@ -975,7 +1061,7 @@
 }
 /* End of Promoted Courses */
 
-/* Available courses */
+/* Available courses - Changes by @bb: redesigned course card */
 .available-courses .available-block .course-slider {
     margin-top: 30px;
     .available-content {
@@ -983,13 +1069,42 @@
     }
     .slick-slide {
         margin-right: 15px;
+        /* Changes by @bb: equal height cards */
+        height: auto !important;
+        > div {
+            height: 100%;
+        }
+        /* Changes by @bb: entire card is clickable */
+        .available-content-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
         .available-content {
             display: block;
             position: relative;
+            background: $white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px $black_10;
+            /* Changes by @bb: fixed height so every card is exactly the same size regardless of content */
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Changes by @bb: push info block to the bottom */
+            /* Changes by @bb: make the image fill the whole card as background, content overlays at bottom */
             .available-img {
-                height: 250px;
+                position: absolute;
+                inset: 0;
+                height: 100%;
                 overflow: hidden;
-                position: relative;
+                z-index: 0;
                 &:after {
                     background: $white;
                     content: "";
@@ -1016,23 +1131,95 @@
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    border-top-left-radius: 5px;
-                    border-top-right-radius: 5px;
+                    border-radius: 10px;
                 }
             }
             .available-info {
+                position: relative;
+                z-index: 1;
                 width: 100%;
-                min-height: 70px;
-                background: $primary;
-                border-bottom-left-radius: 5px;
-                border-bottom-right-radius: 5px;
-                padding: 0 20px;
+                background: rgba(255, 255, 255, 0.92); /* Changes by @bb: semi-transparent overlay */
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                padding: 15px 20px;
                 display: flex;
-                align-items: center;
-                h6 {
-                    margin: 10px 0;
-                    a {
-                        color: $white;
+                flex-direction: column; /* Changes by @bb: vertical layout */
+                /* Changes by @bb: horizontally scrollable tags area */
+                .tags-block {
+                    display: flex;
+                    gap: 8px;
+                    margin-bottom: 10px;
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: none;
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
+                    .course-tag {
+                        font-family: 'Epilogue', sans-serif; /* Changes by @bb */
+                        font-size: 12px;
+                        font-weight: 400;
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        background-color: #ADB185; /* Changes by @bb — match My Courses tag color for consistency */
+                        color: #302F26;
+                        display: inline-block;
+                        white-space: nowrap;
+                        flex-shrink: 0;
+                        i {
+                            margin-right: 4px;
+                        }
+                    }
+                }
+                .title-block {
+                    margin-bottom: 8px;
+                    h6 {
+                        margin: 0;
+                        font-family: 'Averia Serif Libre', serif; /* Changes by @bb */
+                        font-size: 24px;
+                        font-weight: 400;
+                        line-height: 1;
+                        color: $black;
+                    }
+                }
+                .desc-block {
+                    margin-bottom: 12px;
+                    /* Changes by @bb: fixed height for 3 lines so all cards have uniform description area */
+                    min-height: calc(15px * 1.25 * 3);
+                    p {
+                        font-family: 'Epilogue', sans-serif; /* Changes by @bb */
+                        color: $black;
+                        font-size: 15px;
+                        font-weight: 400;
+                        line-height: 1.25;
+                        margin: 0;
+                        /* Changes by @bb: clamp to 3 lines with ellipsis so cards stay uniform height */
+                        display: -webkit-box;
+                        -webkit-line-clamp: 3;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+                /* Changes by @bb: take course button pinned to bottom */
+                .action-block {
+                    margin-top: auto;
+                    .btn-take-course {
+                        display: inline-block;
+                        padding: 8px 20px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        color: $black;
+                        background-color: #f5d6c8;
+                        border: 2px solid $black;
+                        border-radius: 5px;
+                        text-decoration: none;
+                        &:hover {
+                            background-color: $primary;
+                            color: $white;
+                            border-color: $primary;
+                        }
                     }
                 }
             }
@@ -1086,7 +1273,7 @@
     .available-courses .available-block .course-slider {
         padding: 0;
         .slick-slide {
-            margin-right: 0;
+            margin-right: 12px; /* Changes by @bb: small gap between cards on mobile */
             .available-content .available-img:hover:after {
                 width: 80%;
                 height: 220%;
@@ -1443,3 +1630,522 @@
     }
 }
 /* End of Marketing Spot */
+
+
+/* ============================================================
+   My Courses section — Changes by @bb (Figma design)
+   ============================================================ */
+.my-courses-section {
+    padding: 30px 0 20px;
+
+    /* Use default Bootstrap .container sizing to match the All Courses slider container */
+    .my-courses-heading {
+        font-family: 'Averia Serif Libre', serif;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 36px;
+        line-height: 40px;
+        color: #313C0A;
+        margin-bottom: 16px;
+    }
+
+    .my-courses-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        /* Changes by @bb: match the All Courses slick math EXACTLY.
+           Slick computes each slide width as `listWidth / slidesToShow - margin-right`,
+           which subtracts a full margin from EVERY slide (including the last) — the
+           last margin extends past the visible track. To replicate, subtract the same
+           amount from each child's basis and remove the last-child margin override. */
+        gap: 0;
+
+        > * {
+            flex: 0 0 calc(100% / 3 - 15px);
+            min-width: 0;
+            margin-right: 15px;
+        }
+    }
+
+    /* Stats column (stacked cards) */
+    .my-courses-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Match the horizontal gap for consistency */
+
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 10px;
+            background: #E0DACB;
+            border-radius: 10px; /* Match Available course card border-radius */
+            flex: 1 1 0;
+
+            .stat-top {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 16px;
+
+                .stat-number {
+                    font-family: 'Averia Serif Libre', serif;
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 72px;
+                    line-height: 72px;
+                    letter-spacing: -3.6px;
+                    color: #302F26;
+                }
+
+                .stat-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 6px;
+
+                    i {
+                        font-size: 22px;
+                    }
+
+                    &.stat-icon-green {
+                        background: #E8FFE8;
+                        i { color: #11C711; }
+                    }
+
+                    &.stat-icon-blue {
+                        background: #EAEDFF;
+                        i { color: #343B6E; }
+                    }
+                }
+            }
+
+            .stat-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 0 0 4px 0;
+                border-bottom: 2px solid #627521;
+                font-family: 'Averia Serif Libre', serif;
+                font-style: normal;
+                font-weight: 700;
+                font-size: 12px;
+                line-height: 16px;
+                letter-spacing: 1.2px;
+                text-transform: uppercase;
+                color: #302F26;
+                text-decoration: none;
+
+                i {
+                    font-size: 10px;
+                }
+
+                &:hover,
+                &:focus {
+                    color: #302F26;
+                    opacity: 0.75;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    /* My course card (enrolled + progress) */
+    .my-course-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: stretch;
+        padding: 0;
+        background: #E0DACB;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Match Available card shadow */
+        border-radius: 10px; /* Match Available course card border-radius */
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .my-course-img {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: top center; /* Changes by @bb: show top of the image when card height truncates it */
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .my-course-content {
+            position: relative;
+            z-index: 1;
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 12px 18px;
+            gap: 8px;
+            background: rgba(224, 218, 203, 0.85);
+
+            .tags-block {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 7px;
+                flex-wrap: wrap;
+
+                .course-tag {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 4px 8px;
+                    background: #ADB185;
+                    border-radius: 999px;
+                    font-family: 'Epilogue', sans-serif;
+                    font-weight: 400;
+                    font-size: 12px;
+                    line-height: 12px;
+                    color: #302F26;
+                }
+            }
+
+            .my-course-text {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+                width: 100%;
+
+                h6 {
+                    margin: 0;
+                    font-family: 'Averia Serif Libre', serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 24px;
+                    line-height: 29px;
+                    color: #000000;
+                }
+
+                p {
+                    margin: 0;
+                    font-family: 'Epilogue', sans-serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 20px;
+                    color: #000000;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+            }
+
+            .progress-block {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+                width: 100%;
+
+                .progress-bar-outer {
+                    width: 100%;
+                    height: 13px;
+                    background: #FBF6E8;
+                    border-radius: 9999px;
+                    overflow: hidden;
+
+                    .progress-bar-inner {
+                        height: 100%;
+                        background: #627521;
+                        border-radius: 9999px;
+                    }
+                }
+
+                .progress-label {
+                    font-family: 'Averia Serif Libre', serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 12px;
+                    line-height: 15px;
+                    color: #000000;
+                }
+            }
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .my-courses-row {
+            flex-wrap: wrap;
+
+            > * {
+                flex: 1 1 calc(50% - 16px);
+            }
+        }
+    }
+
+    /* Changes by @bb — on mobile (≤767px), the My Courses row becomes a
+       horizontal swipe-scroll: stats card | course 1 | course 2.
+       Each "slide" takes ~85% of viewport width so the next card peeks in,
+       hinting that there's more to swipe to. Width and gap match the
+       All Courses slick slider on mobile for visual consistency. */
+    @media (max-width: 767px) {
+        .my-courses-row {
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            gap: 0;
+            padding-bottom: 8px;
+            /* Hide scrollbar visually but keep behavior */
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > * {
+                /* Match the All Courses slick math on mobile:
+                   listWidth / slidesToShow(1.15) - margin-right(12px). */
+                flex: 0 0 calc(100% / 1.15 - 12px) !important;
+                width: calc(100% / 1.15 - 12px) !important;
+                max-width: calc(100% / 1.15 - 12px) !important;
+                margin-right: 12px !important;
+                scroll-snap-align: start;
+            }
+        }
+
+        /* Stats column on mobile becomes one combined card containing both
+           "Lessons completed" and "Lessons saved" stacked vertically */
+        .my-courses-stats {
+            flex-direction: column;
+            gap: 12px;
+        }
+    }
+
+    @media (max-width: 575px) {
+        /* No vertical stacking — keep the horizontal scroll on phones too.
+           Same slick math: listWidth / 1.15 - margin. */
+        .my-courses-row > * {
+            flex: 0 0 calc(100% / 1.15 - 12px) !important;
+            width: calc(100% / 1.15 - 12px) !important;
+            max-width: calc(100% / 1.15 - 12px) !important;
+        }
+    }
+}
+
+
+/* Changes by @bb: empty state for the My Courses section when user has no enrolled courses */
+.my-courses-section .my-course-empty {
+    flex: 2 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 40px 20px;
+    background: #E0DACB;
+    border-radius: 10px;
+    text-align: center;
+    p {
+        margin: 0;
+        font-family: 'Averia Serif Libre', serif;
+        font-weight: 400;
+        font-size: 18px;
+        color: #302F26;
+    }
+}
+
+
+/* ============================================================
+   Guest login widget — Changes by @bb
+   Shown above All Courses for not-logged-in users.
+   ============================================================ */
+.guest-login-section {
+    padding: 30px 0;
+
+    .guest-login-card {
+        max-width: 540px;
+        margin: 0 auto;
+        background: #FBF6E8;
+        border-radius: 10px;
+        padding: 32px 40px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .guest-login-heading {
+        font-family: 'Averia Serif Libre', serif;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 1.3;
+        color: #302F26;
+        margin: 0 0 20px;
+    }
+
+    .guest-login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .guest-login-field {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        label {
+            font-family: 'Epilogue', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            color: #302F26;
+            min-width: 80px;
+            margin: 0;
+        }
+
+        input {
+            flex: 1;
+            height: 36px;
+            padding: 6px 12px;
+            background: #E0DACB;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            font-family: 'Epilogue', sans-serif;
+            font-size: 14px;
+            color: #302F26;
+
+            &:focus {
+                outline: none;
+                border-color: #627521;
+                background: #fff;
+            }
+        }
+    }
+
+    .guest-login-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        justify-content: flex-end;
+    }
+
+    .btn-create-account,
+    .btn-login {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 20px;
+        border-radius: 999px;
+        font-family: 'Epilogue', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 130px;
+    }
+
+    .btn-create-account {
+        background: transparent;
+        color: #302F26;
+        border: 1px solid #302F26;
+
+        &:hover,
+        &:focus {
+            background: rgba(48, 47, 38, 0.05);
+            color: #302F26;
+            text-decoration: none;
+        }
+    }
+
+    .btn-login {
+        background: #2d3a0a;
+        color: #fff;
+        border: 1px solid #2d3a0a;
+
+        &:hover,
+        &:focus {
+            background: #3d4f15;
+            border-color: #3d4f15;
+            color: #fff;
+        }
+    }
+
+    @media (max-width: 575px) {
+        .guest-login-card {
+            padding: 24px 20px;
+        }
+
+        .guest-login-field {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 6px;
+
+            label {
+                min-width: 0;
+            }
+        }
+
+        .guest-login-actions {
+            flex-direction: column;
+
+            .btn-create-account,
+            .btn-login {
+                width: 100%;
+            }
+        }
+    }
+}
+
+
+/* ============================================================
+   Changes by @bb — Mobile fix for "All Courses" heading + search bar.
+   On viewports ≤767px, the search box (which JS injects inside the
+   <h2>) is taken out of absolute positioning so it stacks BELOW the
+   title instead of overlapping it.
+   ============================================================ */
+@media (max-width: 767px) {
+    .pagelayout-frontpage #frontpage-available-course-list h2 {
+        /* Allow the h2 to grow vertically so its child .box can sit below */
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .pagelayout-frontpage #frontpage-available-course-list h2 > .box.py-3.d-flex.justify-content-center {
+        position: static;
+        right: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        max-width: 320px; /* Changes by @bb: keep search compact on mobile */
+        margin: 0;
+        margin-right: auto; /* Changes by @bb: align to the left side of the heading row */
+        justify-content: flex-start !important;
+    }
+}
+
+
+/* ============================================================
+   Changes by @bb — Hide All Courses slider arrows on mobile.
+   On phones (≤767px) users swipe/scroll the slick carousel with
+   their finger — the arrow buttons feel out of place and overlap
+   the card edges. Hide them and rely on touch swipe.
+   ============================================================ */
+@media (max-width: 767px) {
+    .available-courses .available-block .course-slider .slick-arrow {
+        display: none !important;
+    }
+}

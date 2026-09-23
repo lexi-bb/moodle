@@ -143,7 +143,13 @@ function theme_academi_pluginfile($course, $cm, $context, $filearea, $args, $for
 function theme_academi_pre_css_set_fontwww($css) {
     global $CFG;
     if (empty($CFG->themewww)) {
-        $themewww = $CFG->wwwroot."/theme";
+        // Changes by @bb: use a host-relative path instead of an absolute
+        // $CFG->wwwroot URL. The site is reachable under multiple hostnames
+        // (EC2 hostname + learn.basilicabio.org); an absolute host baked into
+        // the compiled CSS makes font requests cross-origin on every other
+        // hostname, which browsers block for fonts (CORS) -> fallback fonts.
+        // A relative path serves fonts same-origin on whichever host is used.
+        $themewww = (parse_url($CFG->wwwroot, PHP_URL_PATH) ?? '')."/theme";
     } else {
         $themewww = $CFG->themewww;
     }
@@ -159,7 +165,9 @@ function theme_academi_pre_css_set_fontwww($css) {
 function theme_academi_set_fontwww() {
     global $CFG;
     if (empty($CFG->themewww)) {
-        $themewww = $CFG->wwwroot."/theme";
+        // Changes by @bb: host-relative for multi-hostname serving (see
+        // theme_academi_pre_css_set_fontwww above).
+        $themewww = (parse_url($CFG->wwwroot, PHP_URL_PATH) ?? '')."/theme";
     } else {
         $themewww = $CFG->themewww;
     }

@@ -3,8 +3,14 @@
 body {
     font-size: $fontsize;
     font-family: Century Gothic, Arial, Helvetica, sans-serif;
-    color: $color_storm_dust_approx;
-    background-color: $white;
+    color: #302F26; /* Changes by @bb — global text color */
+}
+/* Changes by @bb — page background color on the frontpage and course pages so they share the same beige tone */
+body.pagelayout-frontpage,
+body.pagelayout-course,
+body.pagelayout-incourse,
+body.pagelayout-coursecategory {
+    background-color: #FBF6E8;
 }
 /* End of page container size */
 
@@ -25,7 +31,7 @@ h4,
 h5,
 h6 {
     font-weight: normal;
-    color: $secondary;
+    color: #302F26; /* Changes by @bb — heading text color */
 }
 h1 {
     font-size: 42px;

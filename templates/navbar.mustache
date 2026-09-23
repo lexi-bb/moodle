@@ -55,6 +55,29 @@
         ]
     }
 }}
+{{! Changes by @bb: top header bar with icon, title, and navigation links }}
+<div id="top-header" class="top-header-bar">
+    <div class="container-fluid">
+        <div class="top-header-inner">
+            <div class="top-header-left">
+                {{#showlogo}}
+                    {{# logourl }}
+                        <a href="{{{ config.wwwroot }}}/?redirect=0" class="top-header-logo">
+                            <img src="{{logourl}}" alt="{{sitename}}">
+                        </a>
+                    {{/ logourl }}
+                {{/showlogo}}
+                <a href="https://beta.basilicabio.org/" class="top-header-title">BASILICA BIO</a>
+            </div>
+            <nav class="top-header-nav" aria-label="Top navigation">
+                <a href="https://beta.basilicabio.org/">HOME</a>
+                <a href="https://beta.basilicabio.org/resources/">RESOURCES</a>
+                <a href="https://beta.basilicabio.org/programs/">PROGRAMS</a>
+                <a href="{{{ config.wwwroot }}}/?redirect=0" class="active">LEARN</a>
+            </nav>
+        </div>
+    </div>
+</div>
 <nav id="header" class="{{^themestyleheader }} moodle-based-header {{/themestyleheader }} fixed-top navbar navbar-light bg-faded navbar-static-top navbar-expand moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
     <div class="container-fluid navbar-nav">
             {{^themestyleheader  }} {{!-- Hide menu nave for moodle style }}

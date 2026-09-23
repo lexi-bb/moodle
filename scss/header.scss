@@ -1,8 +1,318 @@
+/* Changes by @bb: Epilogue Black font for top header title */
+@font-face {
+    font-family: 'Epilogue';
+    src: url('[[setting:fontwww]]Epilogue/static/Epilogue-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+/* Changes by @bb: Averia Serif Libre Light font for headings */
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('[[setting:fontwww]]Averia_Serif_Libre/AveriaSerifLibre-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Changes by @bb: Averia Serif Libre Regular font */
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('[[setting:fontwww]]Averia_Serif_Libre/AveriaSerifLibre-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Changes by @bb: Epilogue Regular font */
+@font-face {
+    font-family: 'Epilogue';
+    src: url('[[setting:fontwww]]Epilogue/static/Epilogue-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Changes by @bb: Epilogue Bold font (700) */
+@font-face {
+    font-family: 'Epilogue';
+    src: url('[[setting:fontwww]]Epilogue/static/Epilogue-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Changes by @bb: Averia Serif Libre Italic */
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('[[setting:fontwww]]Averia_Serif_Libre/AveriaSerifLibre-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* Changes by @bb: top header bar */
+.top-header-bar {
+    /* Changes by @bb: match Amplify Basilica Bio bar (._1y4aoyz0) —
+       background #e0dacb tan (was #f5f0e8), matching border color (was #e0d9cc),
+       padding 16px 24px (was 12px 40px). position: fixed is academi's own
+       stacked-header architecture (Amplify uses relative) — left as-is. */
+    background: #e0dacb;
+    border-bottom: 1px solid #e0dacb;
+    padding: 16px 24px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1041;
+    .container-fluid {
+        padding: 0;
+    }
+    .top-header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .top-header-left {
+        /* Changes by @bb: match Amplify logo link (._1y4aoyz1) exactly — the leaf
+           and wordmark sit in one row, bottom-aligned (align-items: flex-end),
+           gap 4px. Verified against the live Amplify DOM: the site uses flex-end
+           plus the wordmark's margin-bottom: -3px below. align-items: center looks
+           wrong here because uppercase Epilogue ink hugs the TOP of its line-box,
+           so centering the boxes lifts the visible text ~3px above the leaf. */
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        .top-header-logo {
+            display: inline-flex;
+            line-height: 0;
+            img {
+                /* Amplify renders the leaf at exactly 30x30 (._1y4aoyz2). */
+                height: 30px;
+                width: 30px;
+                max-width: 30px;
+                object-fit: contain;
+                display: block;
+            }
+        }
+        .top-header-title {
+            font-family: 'Epilogue', sans-serif; /* Changes by @bb */
+            font-size: 30px;
+            font-weight: 900;
+            /* Changes by @bb: match Amplify wordmark (._1y4aoyz3) — olive #313c0a
+               (was #302F26), letter-spacing -1.5px, line-height 1, uppercase.
+               margin-bottom: -3px is REQUIRED for baseline parity with the leaf:
+               combined with the parent's align-items: flex-end it drops the caps
+               onto the leaf's optical centerline. Verified by pixel-ink analysis
+               of the live Amplify header (leaf/text ink centers within 0.5px). */
+            color: #313c0a;
+            line-height: 1;
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+            margin-bottom: -3px;
+            /* Changes by @bb: the wordmark is now an <a> linking to
+               beta.basilicabio.org — suppress the theme's global link
+               underline so it still renders as a plain wordmark. */
+            text-decoration: none;
+        }
+    }
+    .top-header-nav {
+        /* Changes by @bb: match Amplify nav container (._1y4aoyz4) — gap 16px (was 30px). */
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        /* Changes by @bb: match Amplify nav links. Base = inactive link
+           (._1y4aoyz6): 80% opacity, a transparent 4px underline that fills in
+           olive on hover, padding 4px 8px, letter-spacing -0.8px, and a .2s
+           transition. Previously every link carried a permanent near-black
+           underline with no opacity or hover treatment. */
+        a {
+            font-family: 'Epilogue', sans-serif; /* Changes by @bb */
+            font-size: 16px;
+            font-weight: 900;
+            text-decoration: none;
+            color: #302F26;
+            letter-spacing: -0.8px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            opacity: 0.8;
+            border-bottom: 4px solid transparent;
+            transition: opacity 0.2s, border-color 0.2s;
+            &:hover {
+                opacity: 1;
+                border-bottom: 4px solid #313c0a;
+            }
+        }
+        /* Changes by @bb: match Amplify active link (._1y4aoyz7) — olive #313c0a
+           text at full opacity with a permanent olive 4px underline. The template
+           marks the current page with class="active" (LEARN in navbar.mustache). */
+        a.active {
+            color: #313c0a;
+            opacity: 1;
+            border-bottom: 4px solid #313c0a;
+        }
+    }
+}
+
+/* Changes by @bb: push main header down to account for top bar */
+#header.fixed-top {
+    top: 69px; /* Changes by @bb — exact top-bar height (16px padding x2 + 36px nav row + 1px border), measured live; 70px left a 1px seam */
+    /* Changes by @bb: hide logo in lower header since it's in the top bar now */
+    .navbar-brand {
+        display: none;
+    }
+    /* Changes by @bb: hide primary navigation since links moved to user dropdown */
+    .primary-navigation {
+        display: none !important;
+    }
+}
+body {
+    padding-top: 69px; /* Changes by @bb — matches measured top-bar height (69px) */
+}
+
+/* ============================================================
+   Changes by @bb — Mobile responsive layout for the top header.
+   On viewports <=767px, the top-header inner stacks vertically:
+   logo + title on row 1, the four BB nav links wrapping below.
+   The body and #page-wrapper offsets are bumped to account for
+   the now-taller top bar. Hamburger / Moodle's lower header is
+   unchanged — it already handles drawer toggling on its own.
+   ============================================================ */
+@media (max-width: 767px) {
+    .top-header-bar {
+        padding: 8px 16px;
+
+        .top-header-inner {
+            /* Stack: [logo + title] on top, nav links wrapping below */
+            flex-direction: column;
+            align-items: stretch; /* let children control their own alignment */
+            gap: 4px;
+        }
+
+        .top-header-left {
+            width: 100%;
+            justify-content: flex-start;
+            .top-header-logo {
+                margin-top: 0;
+                img {
+                    height: 28px;
+                }
+            }
+            .top-header-title {
+                font-size: 22px;
+                white-space: nowrap;
+                letter-spacing: 0.5px;
+            }
+        }
+
+        .top-header-nav {
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: flex-end; /* Changes by @bb: right-align nav links on mobile */
+            gap: 8px 16px; /* row-gap col-gap */
+            a {
+                font-size: 13px;
+                letter-spacing: 0.5px;
+            }
+        }
+    }
+
+    /* Top bar is taller on mobile (two rows) — push the lower header,
+       body padding, and page-wrapper margin down accordingly. */
+    #header.fixed-top {
+        top: 78px; /* Changes by @bb: matches actual mobile top-bar height (single nav row) */
+    }
+    body {
+        padding-top: 78px;
+    }
+    body:not(.pagelayout-maintenance) #page-wrapper {
+        margin-top: 60px; /* Changes by @bb: only the lower header height — the top bar is already handled by body padding-top: 78px */
+    }
+
+    /* Changes by @bb: on mobile, ensure usernavigation fills the lower-header
+       row so the avatar lands at the right edge instead of in the middle.
+       The desktop rule already sets width:100% on #usernavigation, but
+       Moodle's mobile shows the .navbar-toggler hamburger as a sibling,
+       which can squeeze #usernavigation. Force flex layout explicitly. */
+    #header.navbar.fixed-top {
+        .container-fluid.navbar-nav {
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            padding-left: 12px !important; /* Changes by @bb: breathing room from screen edges */
+            padding-right: 12px !important;
+        }
+        #usernavigation {
+            flex: 1 1 auto !important;
+            width: auto !important;
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center;
+            .editmode-switch-form {
+                order: 0;
+                margin-right: 0 !important;
+                margin-left: 8px !important;
+            }
+            .usermenu-container {
+                order: 1;
+                margin-left: auto !important;
+            }
+        }
+    }
+}
+
+@media (max-width: 374px) {
+    /* Extra-narrow phones — let the title shrink a touch more so it never overflows */
+    .top-header-bar .top-header-left .top-header-title {
+        font-size: 20px;
+    }
+    .top-header-bar .top-header-nav a {
+        font-size: 12px;
+    }
+}
+
 /* Header */
 #header {
     border-bottom: 1px solid $color_whisper;
-    background: $primary;
+    background: #ADB185; /* Changes by @bb — lower header background color */
     &.navbar.fixed-top {
+        /* Changes by @bb: flex layout to keep logo left, nav + user right */
+        .container-fluid.navbar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            padding-left: 0; /* Changes by @bb: remove inner padding gap */
+            padding-right: 0; /* Changes by @bb: remove inner padding gap */
+        }
+        /* Changes by @bb: push everything after logo to the right */
+        .navbar-brand.has-logo {
+            margin-right: auto;
+        }
+        /* Changes by @bb: keep primary-navigation tight next to usernavigation */
+        .primary-navigation {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        /* Changes by @bb: remove gap and phantom ::before on usernavigation */
+        #usernavigation {
+            margin-left: 0 !important;
+            width: 100%;
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+            &::before {
+                display: none;
+            }
+            /* Changes by @bb: edit mode pinned left */
+            .editmode-switch-form {
+                order: -1;
+                margin-left: 0 !important;
+                margin-right: auto !important;
+            }
+            /* Changes by @bb: user menu pinned right */
+            .usermenu-container {
+                order: 99;
+                margin-left: auto !important;
+                margin-right: 0 !important;
+            }
+        }
         #usernavigation .nav-link {
             padding: 0 5px;
             border: 0;
@@ -56,9 +366,11 @@
     }
     .usermenu {
         .login {
-            color: $white;
+            /* Changes by @bb: match the top-header nav link color (#302F26)
+               for the guest "Create an account or Log in" strip (was white). */
+            color: #302F26;
             a {
-                color: $white;
+                color: #302F26;
             }
         }
         a.dropdown-toggle {
@@ -178,12 +490,19 @@
     .nav-link {
         color: $white;
         /* padding: 0; */
+        /* Changes by @bb: green bold text for active nav instead of background highlight */
         &:hover,
         &:focus,
-        &:active,
-        &.active {
-            border-bottom-color: $secondary;
-            background-color: $secondary;
+        &:active {
+            border-bottom-color: transparent;
+            background-color: transparent;
+        }
+        &.active,
+        &[aria-current="true"] {
+            color: #2e7d32;
+            font-weight: bold;
+            background-color: transparent;
+            border-bottom-color: transparent;
         }
         .moremenu .nav-link {
             &:hover,
@@ -326,7 +645,7 @@
 }
 #header {
     .editmode-switch-form {
-        margin-left: 10px;
+        margin-left: 0; /* Changes by @bb: left-aligned now */
         .input-group {
             label {
                 color: $white !important;
@@ -436,7 +755,8 @@
 @media (max-width: 575px) {
     #header {
         &.moodle-based-header ~ .drawer-right {
-            margin-top: 60px;
+            /* Changes by @bb: align with the 138px drawer offset on mobile */
+            margin-top: 138px;
         }
         &.navbar.fixed-top {
             .navbar-nav {

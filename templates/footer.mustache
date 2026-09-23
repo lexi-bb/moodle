@@ -16,31 +16,12 @@
 }}
 {{!
     @template theme_academi/footer
-
-    Page footer template.
-
-    Example context (json):
-    {
-        "output": {
-            "doctype": "<!DOCTYPE html>",
-            "page_title": "Footer",
-            "main_content": "<h1>Headers keep HTML validators happy</h1>",
-            "footersmall": "false",
-            "copyrightfoorer": "Copyright © 2017 - Developed by LMSACE.com. Powered by Moodle",
-            "fstatus1": "true",
-            "fstatus2": "true",
-            "fstatus3": "true",
-            "fstatus4": "true",
-            "ftitle1": "About Us",
-            "ftitle2": "Info",
-            "ftitle3": "Contact Us",
-            "ftitle4": "Follow Us",
-            "backtotopbtn": "true"
-        }
-    }
+    Academi footer template.
+    Changes by @bb — redesigned footer to match Figma spec:
+    left: logo + BASILICA BIO + italic copyright; right: Keep in touch / People link columns.
 }}
 {{#footersmall}}
-    <footer id="page-footer" class=" footer-popover footer-dark text-light">
+    <footer id="page-footer" class="footer-popover footer-dark text-light">
         <div id="footer">
             <div class="footer-bottom">
                 {{# copyrightfooter}}
@@ -52,117 +33,51 @@
 {{/footersmall}}
 
 {{^footersmall}}
-    <footer id="page-footer" class="footer-popover footer-dark text-light">
-        <div id="footer" {{#footerbgimgclass}} class="{{footerbgimgclass}}" {{/footerbgimgclass}}>
-            {{#footerstatus}}
-                <div class="footer-main">
-                    <div class="container-fluid">
-                        <div id="course-footer">
-                            {{{ output.course_footer }}}
+    <footer id="page-footer" class="footer-popover">
+        <div id="footer">
+            {{! Changes by @bb: new custom footer matching Figma design }}
+            <div class="footer-main footer-custom">
+                <div class="footer-inner">
+                    {{! Left: logo + title + copyright }}
+                    {{! Changes by @bb: match beta.basilicabio.org footer — logo and
+                        wordmark are one link to the beta site root (same tab), like
+                        the beta footer's brand block. }}
+                    <div class="footer-left">
+                        <a href="https://beta.basilicabio.org/" class="footer-brand-link">
+                            {{#footerlogourl}}
+                                <div class="footer-logo">
+                                    <img src="{{footerlogourl}}" alt="Basilica Bio">
+                                </div>
+                            {{/footerlogourl}}
+                            <div class="footer-brand">BASILICA BIO</div>
+                        </a>
+                        <div class="footer-copyright-text">
+                            © All materials on this site are created by and the intellectual property of Basilica Bio
                         </div>
-                        <div class="row">
-                            {{! Footer block 1 start }}
-                                {{#fstatus1}}
-                                    <div class="{{colclass}}">
-                                        <div class="infoarea">
-                                            {{#ftitle1}}
-                                                <h2>{{ftitle1}}</h2>
-                                            {{/ftitle1}}
-                                            {{#footlogostatus}}
-                                                {{#footerlogourl}}
-                                                    <div class="footer-logo">
-                                                        <a href="#"><img src="{{footerlogourl}}" width="100" height="100" alt="Academi"></a>
-                                                    </div>
-                                                {{/footerlogourl}}
-                                            {{/footlogostatus}}
-                                            {{#footnote}}
-                                                {{{footnote}}}
-                                            {{/footnote}}
-                                        </div>
-                                    </div>
-                                {{/fstatus1}}
-                            {{! Footer block 1 end }}
+                    </div>
 
-                            {{! Footer block 2 start }}
-                                {{#fstatus2}}
-                                    <div class="{{colclass}} footer-links-block">
-                                        <div class="foot-links">
-                                            {{#ftitle2}}
-                                                <h2>{{ftitle2}}</h2>
-                                            {{/ftitle2}}
-                                            {{# infolink}}
-                                                <ul>
-                                                    {{{infolink}}}
-                                                </ul>
-                                            {{/ infolink}}
-                                        </div>
-                                    </div>
-                                {{/fstatus2}}
-                            {{! Footer block 2 end }}
-
-                            {{! Footer block 3 start }}
-                                {{#fstatus3}}
-                                    <div class="{{colclass}}">
-                                        <div class="contact-info">
-                                            {{#ftitle3}}
-                                                <h2>{{ftitle3}}</h2>
-                                            {{/ftitle3}}
-                                            {{# address}}
-                                                <p>{{address}}</p>
-                                            {{/ address}}
-                                            {{# phoneno}}
-                                                <p><i class="fa fa-phone-square"></i> {{phone}} : {{phoneno}}</p>
-                                            {{/ phoneno}}
-                                            {{# emailid}}
-                                                <p><i class="fa fa-envelope"></i> {{email}} : <a class="mail-link" href="mailto:{{emailid}}">{{emailid}}</a></p>
-                                            {{/ emailid}}
-                                        </div>
-                                    </div>
-                                {{/fstatus3}}
-                            {{! Footer block 3 end }}
-
-                            {{! Footer block 4 start }}
-                                {{#fstatus4}}
-                                    <div class="{{colclass}}">
-                                        <div class="social-media">
-                                            {{#ftitle4}}
-                                                <h2>{{ftitle4}}</h2>
-                                            {{/ftitle4}}
-                                            <ul>
-                                            {{#socialmedia}}
-                                                {{# socialstatus}}
-                                                    {{#sicon}}
-                                                        <li class="smedia-{{sno}}">
-                                                            <a href="{{{surl}}}" target="_blank" style="background-color: {{{siconcolor}}}">
-                                                                <span class="media-icon">
-                                                                    <i class="fa fa-{{sicon}}"></i>
-                                                                </span>
-                                                            </a>
-                                                        </li>
-                                                    {{/sicon}}
-                                                {{/ socialstatus}}
-                                            {{/socialmedia}}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                {{/fstatus4}}
-                            {{! Footer block 4 end }}
+                    {{! Right: two link columns }}
+                    {{! Changes by @bb: hrefs updated to beta.basilicabio.org paths and
+                        open in the same tab, matching the beta footer. Instagram keeps
+                        target="_blank" — beta does the same for the external site. }}
+                    <div class="footer-right">
+                        <div class="footer-col">
+                            <div class="footer-col-title">Keep in touch</div>
+                            <a href="https://www.instagram.com/basilicabio/" class="footer-link" target="_blank" rel="noopener">Instagram</a>
+                            <a href="https://beta.basilicabio.org/newsletter" class="footer-link">Newsletter</a>
+                            <a href="mailto:info@basilicabio.org" class="footer-link">info@basilicabio.org</a>
+                        </div>
+                        <div class="footer-col">
+                            <div class="footer-col-title">People</div>
+                            <a href="https://beta.basilicabio.org/about" class="footer-link">Our team</a>
+                            <a href="https://beta.basilicabio.org/volunteer" class="footer-link">Volunteer interest form</a>
                         </div>
                     </div>
                 </div>
-            {{/footerstatus}}
-            {{#footerbottomstatus}}
-                <div class="footer-bottom">
-                    {{# copyrightfooter}}
-                        <p>{{{copyrightfooter}}}</p>
-                    {{/ copyrightfooter}}
-                    {{! Moodle footer debug footer }}
-                    <div class="footer-content-debugging">
-                        <div class="container">{{{ output.debug_footer_html }}}</div>
-                    </div>
-                </div>
-            {{/footerbottomstatus}}
-            {{! Moodle footer help icon popover }}
+                <div id="course-footer">{{{ output.course_footer }}}</div>
+            </div>
+
+            {{! Moodle footer help icon popover (kept for functionality) }}
             <div data-region="footer-container-popover">
                 {{#output.has_communication_links}}
                     <button onclick="window.open('{{output.communication_url}}', '_blank', 'noreferrer')" class="btn btn-icon bg-primary text-white icon-no-margin btn-footer-communication" aria-label="{{#str}}communicationroomlink, course{{/str}}">
@@ -233,4 +148,3 @@ require(['theme_boost/footer-popover'], function(FooterPopover) {
     FooterPopover.init();
 });
 {{/js}}
-
