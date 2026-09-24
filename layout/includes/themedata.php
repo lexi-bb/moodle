@@ -59,5 +59,7 @@ $templatecontext = [
     "themestyleheader" => $themestyleheader,
     'showsitename' => $showsitename,
     'showlogo' => $showlogo,
+    // Changes by @bb: main-site base URL for navbar/footer links (see lib.php).
+    'bbsiteurl' => THEME_ACADEMI_BB_SITE_URL,
 ];
 $templatecontext += footer();

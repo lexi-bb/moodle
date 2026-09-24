@@ -1,5 +1,22 @@
 # Academi Theme Change Log
 
+## 2026-09-24 — Point site links at basilicabio.org
+
+### Files Modified
+- `lib.php`
+- `layout/includes/themedata.php`
+- `templates/navbar.mustache`
+- `templates/footer.mustache`
+
+### Changes
+
+**Main-site URL centralized in one constant — `beta.basilicabio.org` → `basilicabio.org`**
+- Added `define('THEME_ACADEMI_BB_SITE_URL', 'https://basilicabio.org');` in `lib.php` (no trailing slash). This is now the only place the main-site host is set; change it there to repoint every header/footer link.
+- `layout/includes/themedata.php` exposes it to templates as the `bbsiteurl` context variable. themedata.php feeds every layout that renders the top header and custom footer (columns2, drawers, frontpage, login via `includes/layoutdata.php`). `maintenance` uses `footersmall`, so it never renders these links.
+- `templates/navbar.mustache`: `.top-header-title` wordmark and HOME / RESOURCES / PROGRAMS now use `{{bbsiteurl}}/`, `{{bbsiteurl}}/resources/`, `{{bbsiteurl}}/programs/`. LEARN still uses `config.wwwroot`.
+- `templates/footer.mustache`: `.footer-brand-link`, Newsletter, Our team, Volunteer interest form now use `{{bbsiteurl}}/`, `/newsletter`, `/about`, `/volunteer`. Paths are unchanged from the beta-era links; only the host moved. Instagram and `mailto:info@basilicabio.org` are unchanged.
+- Earlier `@bb` comments that say links/measurements came from `beta.basilicabio.org` (footer.mustache, `scss/footer.scss`, `scss/header.scss`) are left as history.
+
 ## 2026-04-14 — Match top header to Amplify (Basilica Bio) site
 
 ### Files Modified

@@ -43,7 +43,8 @@
                         wordmark are one link to the beta site root (same tab), like
                         the beta footer's brand block. }}
                     <div class="footer-left">
-                        <a href="https://beta.basilicabio.org/" class="footer-brand-link">
+                        {{! Changes by @bb: host comes from the bbsiteurl context var (THEME_ACADEMI_BB_SITE_URL in lib.php), was hardcoded beta.basilicabio.org }}
+                        <a href="{{bbsiteurl}}/" class="footer-brand-link">
                             {{#footerlogourl}}
                                 <div class="footer-logo">
                                     <img src="{{footerlogourl}}" alt="Basilica Bio">
@@ -61,16 +62,17 @@
                         open in the same tab, matching the beta footer. Instagram keeps
                         target="_blank" — beta does the same for the external site. }}
                     <div class="footer-right">
+                        {{! Changes by @bb: host comes from the bbsiteurl context var, was hardcoded beta.basilicabio.org }}
                         <div class="footer-col">
                             <div class="footer-col-title">Keep in touch</div>
                             <a href="https://www.instagram.com/basilicabio/" class="footer-link" target="_blank" rel="noopener">Instagram</a>
-                            <a href="https://beta.basilicabio.org/newsletter" class="footer-link">Newsletter</a>
+                            <a href="{{bbsiteurl}}/newsletter" class="footer-link">Newsletter</a>
                             <a href="mailto:info@basilicabio.org" class="footer-link">info@basilicabio.org</a>
                         </div>
                         <div class="footer-col">
                             <div class="footer-col-title">People</div>
-                            <a href="https://beta.basilicabio.org/about" class="footer-link">Our team</a>
-                            <a href="https://beta.basilicabio.org/volunteer" class="footer-link">Volunteer interest form</a>
+                            <a href="{{bbsiteurl}}/about" class="footer-link">Our team</a>
+                            <a href="{{bbsiteurl}}/volunteer" class="footer-link">Volunteer interest form</a>
                         </div>
                     </div>
                 </div>

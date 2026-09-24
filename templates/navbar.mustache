@@ -67,12 +67,14 @@
                         </a>
                     {{/ logourl }}
                 {{/showlogo}}
-                <a href="https://beta.basilicabio.org/" class="top-header-title">BASILICA BIO</a>
+                {{! Changes by @bb: host comes from the bbsiteurl context var (THEME_ACADEMI_BB_SITE_URL in lib.php), was hardcoded beta.basilicabio.org }}
+                <a href="{{bbsiteurl}}/" class="top-header-title">BASILICA BIO</a>
             </div>
             <nav class="top-header-nav" aria-label="Top navigation">
-                <a href="https://beta.basilicabio.org/">HOME</a>
-                <a href="https://beta.basilicabio.org/resources/">RESOURCES</a>
-                <a href="https://beta.basilicabio.org/programs/">PROGRAMS</a>
+                {{! Changes by @bb: host comes from the bbsiteurl context var, was hardcoded beta.basilicabio.org }}
+                <a href="{{bbsiteurl}}/">HOME</a>
+                <a href="{{bbsiteurl}}/resources/">RESOURCES</a>
+                <a href="{{bbsiteurl}}/programs/">PROGRAMS</a>
                 <a href="{{{ config.wwwroot }}}/?redirect=0" class="active">LEARN</a>
             </nav>
         </div>

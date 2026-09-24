@@ -50,6 +50,11 @@ define('LOGO', 0);
 define('SITENAME', 1);
 define('LOGOANDSITENAME', 2);
 
+// Changes by @bb: single source of truth for the Basilica Bio main-site URL
+// (no trailing slash). Exposed to templates as {{bbsiteurl}} via
+// layout/includes/themedata.php; change here to repoint header + footer links.
+define('THEME_ACADEMI_BB_SITE_URL', 'https://basilicabio.org');
+
 /**
  * Load the Jquery and migration files
  * @param moodle_page $page
